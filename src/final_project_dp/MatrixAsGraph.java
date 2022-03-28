@@ -82,8 +82,11 @@ public class MatrixAsGraph implements IGraph<Index> {
         if (innerMatrix.getValue(aNode.getData()) == 1) { // רק אם הקודוקד שהעבירו לי הערך של האינדקס שלו הוא אחד אני אעשה את שאר הפונקציה
             List<Node<Index>> reachableNodes = new ArrayList<>(); // רשימה שתכיל לי את הרשימה של השכנים ב node
             for (Index index : innerMatrix.getNeighbors(aNode.getData())) {  // עבור כל שכן של אותו אידקס של ה node ששלחו לי
-                if (innerMatrix.getValue(index) == 1) // אם הערך באותו אידקס הוא אחד
-                    reachableNodes.add(new Node<>(index, aNode));  // נוסיף אותו בתור node לרשימה של השכנים
+                if (innerMatrix.getValue(index) == 1) { // אם הערך באותו אידקס הוא אחד
+                    Node<Index> newNode = new Node<>(index);
+                    newNode.getParents().add(aNode);
+                    reachableNodes.add(newNode);  // נוסיף אותו בתור node לרשימה של השכנים
+                }
             }
 
             return reachableNodes; // תזחר את אותה רשימה

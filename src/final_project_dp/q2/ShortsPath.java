@@ -27,10 +27,11 @@ public class ShortsPath<T> {
 
         workingQ.add(sourceNode);
         while (!workingQ.isEmpty()){
-            Node<T> removed = workingQ.remove();
+            Node<T> removed = workingQ.poll();
             finished.add(removed);
             Collection<Node<T>> reachableNodes = someGraph.getReachableNodes(removed);
             for (Node<T> reachableNode : reachableNodes){
+                reachableNode.setDist(removed.getDist()+1);
                 if(!finished.contains(reachableNode) && !workingQ.contains(reachableNode)){
                     workingQ.add(reachableNode);
                 }
@@ -38,6 +39,7 @@ public class ShortsPath<T> {
         }
         Set<T> returnSet = new LinkedHashSet<>();
         for (Node<T> node: finished){
+            System.out.println(node);
             returnSet.add(node.getData());
         }
         finished.clear();
@@ -48,33 +50,10 @@ public class ShortsPath<T> {
     // לא עובד
     public Set<T> shortsPath(IGraph<T> someGraph, T source, T destination){
 
-        Node<T> sourceNode = someGraph.getNode(source);
-        Node<T> destinationNode = someGraph.getNode(destination);
+        Node<T> sourceNode = new Node<>(source);
+        Node<T> destinationNode = new Node<>(destination);
 
-        if(sourceNode == null)
-            throw new IllegalArgumentException("source node not on the graph");
 
-        if(destination == null)
-            throw new IllegalArgumentException("destination node not on the graph");
-
-        workingQ.add(destinationNode);
-        while (!workingQ.isEmpty()){
-            Node<T> removed = workingQ.poll();
-            finished.add(removed);
-            Collection<Node<T>> reachableNodes = someGraph.getReachableNodes(removed);
-            for (Node<T> reachableNode : reachableNodes){
-                if(!finished.contains(reachableNode) && !workingQ.contains(reachableNode)){
-                    workingQ.add(reachableNode);
-                }
-            }
-        }
-        Set<T> returnSet = new LinkedHashSet<>();
-        for (Node<T> node: finished){
-            returnSet.add(node.getData());
-        }
-        finished.clear();
-        someGraph.backToRoot();
-
-        return returnSet;
+        return null;
     }
 }

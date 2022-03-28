@@ -6,6 +6,8 @@ package final_project_dp;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Node<T> implements Serializable {
@@ -13,15 +15,14 @@ public class Node<T> implements Serializable {
     private static final Long serialVersionUID = 1L;
 
     private T data;
-    private Node<T> parent;
+    private List<Node<T>> parents;
+    private int dist;
 
-    public Node(T data, Node<T> parent){
-        this.data = data;
-        this.parent = parent;
-    }
+
 
     public Node(T data){
-        this(data,null);
+        this.data = data;
+        this.parents = new ArrayList<>();
     }
 
     public Node(){
@@ -36,12 +37,12 @@ public class Node<T> implements Serializable {
         this.data = data;
     }
 
-    public Node<T> getParent() {
-        return parent;
+    public List<Node<T>> getParents() {
+        return parents;
     }
 
-    public void setParent(@NotNull Node<T> parent) {
-        this.parent = parent;
+    public void setParent(@NotNull List<Node<T>> parents) {
+        this.parents = parents;
     }
 
     @Override
@@ -58,6 +59,24 @@ public class Node<T> implements Serializable {
     @Override
     public int hashCode() {
         return data != null ? data.hashCode() : 0;
+    }
+
+
+    public int getDist() {
+        return dist;
+    }
+
+    public void setDist(int dist) {
+        this.dist = dist;
+    }
+
+    @Override
+    public String toString() {
+        return "Node{" +
+                "data=" + data +
+                ", parents=" + parents +
+                ", dist=" + dist +
+                '}';
     }
 }
 
