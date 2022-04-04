@@ -3,7 +3,7 @@ package final_project_dp;
 import java.util.Objects;
 
 public class Index{
-    int row, column;
+    public int row, column;
 
     public Index(final int row, final int column) {
         this.row=row;

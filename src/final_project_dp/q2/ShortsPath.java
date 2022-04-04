@@ -20,7 +20,10 @@ public class ShortsPath<T> {
     }
 
     // עובד
-    public Set<T> bfs(IGraph<T> someGraph, T source){
+    public Set<T> bfs(IGraph<T> someGraph, T source, T dest){
+
+        Map<T,Node<T>> map = new HashMap<>();
+
         Node<T> sourceNode = someGraph.getNode(source);
         if(sourceNode == null)
             throw new IllegalArgumentException("source node not on the graph");
@@ -29,9 +32,16 @@ public class ShortsPath<T> {
         while (!workingQ.isEmpty()){
             Node<T> removed = workingQ.poll();
             finished.add(removed);
+            if(!map.containsKey(removed.getData()))
+                map.put(removed.getData(),removed);
+
+            if(removed.getData().equals(dest))
+                break;
+
+
             Collection<Node<T>> reachableNodes = someGraph.getReachableNodes(removed);
             for (Node<T> reachableNode : reachableNodes){
-                reachableNode.setDist(removed.getDist()+1);
+//               removed.getParents().add()
                 if(!finished.contains(reachableNode) && !workingQ.contains(reachableNode)){
                     workingQ.add(reachableNode);
                 }
