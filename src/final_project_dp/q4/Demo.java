@@ -17,15 +17,14 @@ public class Demo {
 //                {1, 1, 1}, // 3
 //                {1, 1, 1}, // 4
 //        };
-        int[][]mat = {
-                {100,100,100},
-                {500,900,300}
+        int[][] mat = {
+                {100, 100, 100},
+                {500, 100, 300},
         };
 
         WeightedMatrixAsGraph weightedMatrix = new WeightedMatrixAsGraph(new WeightedMatrix(mat));
         Q4<Index> q4 = new Q4<>();
-        System.out.println(weightedMatrix.getWeight(new Index(0,2), new Index(0,1)));
-        Collection<Index> al = q4.func(weightedMatrix,new Index(1,0),new Index(1,2));
+        Collection<Index> al = q4.func(weightedMatrix, new Index(1, 0), new Index(1, 2));
         System.out.println(al);
     }
 }
