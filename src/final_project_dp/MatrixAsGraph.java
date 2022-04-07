@@ -1,10 +1,7 @@
 package final_project_dp;
 
 
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * This class uses the Adapter pattern, also known as Wrapper/Decorator.
@@ -14,12 +11,15 @@ import java.util.List;
 public class MatrixAsGraph implements IGraph<Index> {
     private Matrix innerMatrix;
     private Index source;
+    private Map<Index, Node<Index>> nodesMap;
+
 
     public MatrixAsGraph(Matrix matrix) {
         if (matrix != null) this.innerMatrix = matrix; // אם העבירו לי מטריצה לא ריקה
         else innerMatrix = new Matrix(); // אם היא לא ריקה אז נעשה מטריצה רנדומאלית
 //        source = new Index(0, 0); // נשים את השורש בהתחלה של במטריצה
         setSource();
+        setNodesMap();
     }
 
     public Matrix getInnerMatrix() {
@@ -43,18 +43,18 @@ public class MatrixAsGraph implements IGraph<Index> {
     }
 
     @Override
-    public boolean nextNodeInTheGraph(){
+    public boolean nextNodeInTheGraph() {
         int[][] arr = this.innerMatrix.primitiveMatrix;
-        for (int j = source.getColumn()+1; j < arr[source.getRow()].length; j++) {
+        for (int j = source.getColumn() + 1; j < arr[source.getRow()].length; j++) {
             if (arr[source.getRow()][j] == 1) {
                 source = new Index(source.getRow(), j);
                 return true;
             }
         }
-        for (int i = source.getRow()+1; i < arr.length; i++) {
+        for (int i = source.getRow() + 1; i < arr.length; i++) {
             for (int j = 0; j < arr[i].length; j++) {
-                if(arr[i][j] == 1){
-                    source = new Index(i,j);
+                if (arr[i][j] == 1) {
+                    source = new Index(i, j);
                     return true;
                 }
 
@@ -64,7 +64,7 @@ public class MatrixAsGraph implements IGraph<Index> {
     }
 
     @Override
-    public boolean backToRoot(){
+    public boolean backToRoot() {
         setSource();
         return true;
     }
@@ -93,6 +93,48 @@ public class MatrixAsGraph implements IGraph<Index> {
             return reachableNodes; // תזחר את אותה רשימה
         }
         return null; // אם זה לא אחד אני אחזיר רשימה ריקה - null
+    }
+
+    @Override
+    public Map<Index, Node<Index>> getNodesMap() {
+        return this.nodesMap;
+    }
+
+
+    public void setNodesMap() {
+        this.nodesMap = Collections.synchronizedMap(new HashMap<>());
+        for (int i = 0; i < innerMatrix.primitiveMatrix.length; i++) {
+            for (int j = 0; j < innerMatrix.primitiveMatrix[i].length; j++) {
+                Index temp = new Index(i, j);
+                if (innerMatrix.getValue(temp) == 1)
+                    nodesMap.put(temp, new Node<>(temp));
+            }
+        }
+    }
+
+    @Override
+    public boolean isReachable(Index n1, Index n2) {
+        Map<Index, Boolean> isVisited = Collections.synchronizedMap(new HashMap<>());
+        for (Map.Entry<Index, Node<Index>> entry : this.nodesMap.entrySet())
+            isVisited.put(entry.getKey(), false);
+
+        Queue<Index> workingQ = new LinkedList<>();
+        workingQ.add(n1);
+        while (!workingQ.isEmpty()) {
+            Index removed = workingQ.remove();
+            isVisited.put(removed, true);
+            Collection<Node<Index>> neighbors = this.getReachableNodes(new Node<>(removed));
+            for (Node<Index> neighbor : neighbors) {
+                Index neighborIndex = neighbor.getData();
+                if (neighborIndex.equals(n2))
+                    return true;
+                if (!isVisited.get(neighborIndex)) {
+                    isVisited.put(neighborIndex, true);
+                    workingQ.add(neighborIndex);
+                }
+            }
+        }
+        return false;
     }
 
 

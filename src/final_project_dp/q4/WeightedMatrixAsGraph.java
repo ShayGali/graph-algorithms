@@ -3,13 +3,12 @@ package final_project_dp.q4;
 import final_project_dp.Index;
 import final_project_dp.Node;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public class WeightedMatrixAsGraph implements WeightedGraph<Index> {
 
     private WeightedMatrix innerMatrix;
+    private Map<Index, Node<Index>> nodesMap;
     private Index source;
 
     public WeightedMatrixAsGraph(WeightedMatrix matrix) {
@@ -17,6 +16,7 @@ public class WeightedMatrixAsGraph implements WeightedGraph<Index> {
         else innerMatrix = new WeightedMatrix(); // אם היא לא ריקה אז נעשה מטריצה רנדומאלית
 //        source = new Index(0, 0); // נשים את השורש בהתחלה של במטריצה
         setSource();
+        setNodesMap();
     }
 
 
@@ -73,12 +73,6 @@ public class WeightedMatrixAsGraph implements WeightedGraph<Index> {
         return true;
     }
 
-    @Override
-    public Node<Index> getNode(Index index) {
-        return innerMatrix.getValue(index) > 0 ? new Node<>(index) : null;
-
-    }
-
 
     @Override
     public Collection<Node<Index>> getReachableNodes(Node<Index> aNode) {
@@ -103,6 +97,90 @@ public class WeightedMatrixAsGraph implements WeightedGraph<Index> {
             return innerMatrix.getValue(i) + innerMatrix.getValue(j);
         }
         return null;
+    }
+
+    @Override
+    public void InitializeDistancesFromSource(Index source) {
+        for (Node<Index> n : this.nodesMap.values()) n.setDist(Integer.MAX_VALUE); //כדי לקרוא לפונקציה כמה פעמים
+
+        Map<Index, Boolean> isVisited = Collections.synchronizedMap(new HashMap<>());
+        for (Map.Entry<Index, Node<Index>> entry : this.nodesMap.entrySet())
+            isVisited.put(entry.getKey(), false);
+
+        Node<Index> sourceNode = this.getNode(source);
+        Stack<Node<Index>> workingStack = new Stack<>();
+
+
+        sourceNode.setDist(0);
+        workingStack.push(sourceNode);
+        while (!workingStack.isEmpty()) {
+            Node<Index> remove = workingStack.pop();
+            isVisited.put(remove.getData(), true);
+            Collection<Node<Index>> neighbours = this.getReachableNodes(remove);
+
+            for (Node<Index> neighbor : neighbours) {
+                int tempDist = nodesMap.get(neighbor.getData()).getDist();
+                int distanceBetweenRemoveTempNodeFromStart = this.getWeight(remove.getData(), neighbor.getData()) + remove.getDist();
+                if(tempDist < distanceBetweenRemoveTempNodeFromStart){
+                    neighbor.setDist(tempDist);
+                    neighbor.setParent(nodesMap.get(neighbor.getData()).getParents());
+                }else{
+                    neighbor.setDist(distanceBetweenRemoveTempNodeFromStart);
+                    neighbor.setParent(remove);
+                }
+                nodesMap.put(neighbor.getData(), neighbor);
+                if (!isVisited.get(neighbor.getData())) {
+                    isVisited.put(neighbor.getData(), true);
+                    workingStack.push(neighbor);
+                }
+            }
+        }
+    }
+
+    private void setNodesMap() {
+        this.nodesMap = Collections.synchronizedMap(new HashMap<>());
+        for (int i = 0; i < innerMatrix.primitiveMatrix.length; i++) {
+            for (int j = 0; j < innerMatrix.primitiveMatrix[i].length; j++) {
+                Index temp = new Index(i, j);
+                if (innerMatrix.getValue(temp) > 0)
+                    nodesMap.put(temp, new Node<>(temp));
+            }
+        }
+    }
+
+    @Override
+    public Map<Index, Node<Index>> getNodesMap() {
+        return this.nodesMap;
+    }
+
+    @Override
+    public boolean isReachable(Index n1, Index n2) {
+        Map<Index, Boolean> isVisited = Collections.synchronizedMap(new HashMap<>());
+        for (Map.Entry<Index, Node<Index>> entry : this.nodesMap.entrySet())
+            isVisited.put(entry.getKey(), false);
+
+        Queue<Index> workingQ = new LinkedList<>();
+        workingQ.add(n1);
+        while (!workingQ.isEmpty()) {
+            Index removed = workingQ.remove();
+            isVisited.put(removed, true);
+            Collection<Node<Index>> neighbors = this.getReachableNodes(new Node<>(removed));
+            for (Node<Index> neighbor : neighbors) {
+                Index neighborIndex = neighbor.getData();
+                if (neighborIndex.equals(n2))
+                    return true;
+                if (!isVisited.get(neighborIndex)) {
+                    isVisited.put(neighborIndex, true);
+                    workingQ.add(neighborIndex);
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public Node<Index> getNode(Index data) {
+        return this.nodesMap.get(data);
     }
 }
 

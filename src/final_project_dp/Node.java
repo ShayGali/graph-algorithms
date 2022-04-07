@@ -4,9 +4,7 @@ package final_project_dp;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Objects;
 
 public class Node<T> implements Serializable, Comparator<Node<T>> {
@@ -40,14 +38,14 @@ public class Node<T> implements Serializable, Comparator<Node<T>> {
         return parent;
     }
 
-    public void setParent(@NotNull Node<T> parent) {
+    public void setParent(Node<T> parent) {
         this.parent = parent;
     }
 
 
     @Override
     public int compare(Node<T> o1, Node<T> o2) {
-        return Integer.compare(o2.getDist(), o1.getDist());
+        return (o1.getDist() < o2.getDist()) ? -1 : ((o1.getDist() == o2.getDist()) ? 0 : 1);
     }
 
     @Override
@@ -58,9 +56,7 @@ public class Node<T> implements Serializable, Comparator<Node<T>> {
         return Objects.equals(data, state1.data);
     }
 
-    /*
-    question ? ifTrue : ifFalse
-     */
+
     @Override
     public int hashCode() {
         return data != null ? data.hashCode() : 0;
@@ -75,12 +71,16 @@ public class Node<T> implements Serializable, Comparator<Node<T>> {
         this.dist = dist;
     }
 
-
+    String printParent(){
+        if (parent == null)
+            return null;
+        return parent.getData() + "";
+    }
     @Override
     public String toString() {
         return "Node{" +
                 "data=" + data +
-                ", parent=" + parent +
+                ", parent=" + printParent() +
                 ", dist=" + dist +
                 '}';
     }

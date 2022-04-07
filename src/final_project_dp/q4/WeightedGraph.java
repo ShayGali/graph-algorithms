@@ -11,4 +11,10 @@ public interface WeightedGraph<T> extends IGraph<T> {
      * else the function will return null.
      */
     Integer getWeight(T i, T j);
+
+    /**
+     * Initialize the distance and the parents of the nodes in the nodeMap
+     * @param source the index of the source
+     */
+    void InitializeDistancesFromSource(T source);
 }
