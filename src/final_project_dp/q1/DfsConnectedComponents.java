@@ -1,12 +1,12 @@
 package final_project_dp.q1;
 
-import final_project_dp.IGraph;
-import final_project_dp.Node;
+import final_project_dp.base_classes.IGraph;
+import final_project_dp.base_classes.Node;
 
 import java.util.*;
 
 public class DfsConnectedComponents<T> {
-    
+
     private Stack<Node<T>> workingStack; // באיזה קודקודים אני מבקר
     private Set<Node<T>> finished; // סט של מי שאני כבר ביקרתי אצלו בסיבוב הנוכחי
     private Set<Node<T>> visitedVertices; // סט של כל הקודקודים שביקרתי בהם
@@ -18,8 +18,8 @@ public class DfsConnectedComponents<T> {
 
     }
 
-    public Set<Set<T>> allConnectedComponents(IGraph<T> someGraph) {
-        Set<Set<T>> components = new LinkedHashSet<>(); // the return HashSet
+    public LinkedList<LinkedList<T>> allConnectedComponents(IGraph<T> someGraph) {
+        LinkedList<LinkedList<T>> components = new LinkedList<>(); // the return HashSet
 
         do {
             if (visitedVertices.contains(someGraph.getRoot())) { // if the current root was visited we continue looking for new root
@@ -39,13 +39,13 @@ public class DfsConnectedComponents<T> {
             }
             // when we're done exploring from the root we add the components to the visitedVertices list
             // we want just the data and not the all node, so we put the finished set in new HashSet
-            Set<T> blackSet = new LinkedHashSet<>();
+            List<T> blackSet = new LinkedList<>();
             for (Node<T> node : finished) {
                 blackSet.add(node.getData());
                 visitedVertices.add(node);
             }
             // and add the new HashSet that we get to the components HashSet
-            components.add(new LinkedHashSet<>(blackSet));
+            components.add(new LinkedList<>(blackSet));
 
             // and clear the sets
             blackSet.clear();

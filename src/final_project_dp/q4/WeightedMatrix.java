@@ -1,6 +1,6 @@
 package final_project_dp.q4;
 
-import final_project_dp.Index;
+import final_project_dp.base_classes.Index;
 
 import java.util.*;
 

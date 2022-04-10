@@ -1,7 +1,7 @@
 package final_project_dp.q4;
 
-import final_project_dp.Index;
-import final_project_dp.Node;
+import final_project_dp.base_classes.Index;
+import final_project_dp.base_classes.Node;
 
 import java.util.*;
 
@@ -121,10 +121,10 @@ public class WeightedMatrixAsGraph implements WeightedGraph<Index> {
             for (Node<Index> neighbor : neighbours) {
                 int tempDist = nodesMap.get(neighbor.getData()).getDist();
                 int distanceBetweenRemoveTempNodeFromStart = this.getWeight(remove.getData(), neighbor.getData()) + remove.getDist();
-                if(tempDist < distanceBetweenRemoveTempNodeFromStart){
+                if (tempDist < distanceBetweenRemoveTempNodeFromStart) {
                     neighbor.setDist(tempDist);
                     neighbor.setParent(nodesMap.get(neighbor.getData()).getParents());
-                }else{
+                } else {
                     neighbor.setDist(distanceBetweenRemoveTempNodeFromStart);
                     neighbor.setParent(remove);
                 }
@@ -136,6 +136,7 @@ public class WeightedMatrixAsGraph implements WeightedGraph<Index> {
             }
         }
     }
+
 
     private void setNodesMap() {
         this.nodesMap = Collections.synchronizedMap(new HashMap<>());

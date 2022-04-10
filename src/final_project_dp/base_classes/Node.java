@@ -1,4 +1,4 @@
-package final_project_dp;
+package final_project_dp.base_classes;
 
 
 import org.jetbrains.annotations.NotNull;
@@ -7,14 +7,13 @@ import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Objects;
 
-public class Node<T> implements Serializable, Comparator<Node<T>> {
+public class Node<T> implements Serializable, Comparable<Node<T>> {
 
     private static final Long serialVersionUID = 1L;
 
     private T data;
     private Node<T> parent;
     private int dist;
-
 
     public Node(T data) {
         this.data = data;
@@ -44,8 +43,8 @@ public class Node<T> implements Serializable, Comparator<Node<T>> {
 
 
     @Override
-    public int compare(Node<T> o1, Node<T> o2) {
-        return (o1.getDist() < o2.getDist()) ? -1 : ((o1.getDist() == o2.getDist()) ? 0 : 1);
+    public int compareTo(@NotNull Node<T> o) {
+        return (this.getDist() < o.getDist()) ? -1 : ((this.getDist() == o.getDist()) ? 0 : 1);
     }
 
     @Override
@@ -71,11 +70,13 @@ public class Node<T> implements Serializable, Comparator<Node<T>> {
         this.dist = dist;
     }
 
+
     String printParent(){
         if (parent == null)
             return null;
         return parent.getData() + "";
     }
+
     @Override
     public String toString() {
         return "Node{" +

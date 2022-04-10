@@ -1,4 +1,4 @@
-package final_project_dp;
+package final_project_dp.base_classes;
 
 
 import java.util.*;
@@ -136,6 +136,5 @@ public class MatrixAsGraph implements IGraph<Index> {
         }
         return false;
     }
-
 
 }

@@ -1,6 +1,6 @@
 package final_project_dp.q4;
 
-import final_project_dp.IGraph;
+import final_project_dp.base_classes.IGraph;
 
 public interface WeightedGraph<T> extends IGraph<T> {
     /**

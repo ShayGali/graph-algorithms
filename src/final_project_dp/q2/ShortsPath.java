@@ -1,8 +1,7 @@
 package final_project_dp.q2;
 
-import final_project_dp.IGraph;
-import final_project_dp.Index;
-import final_project_dp.Node;
+import final_project_dp.base_classes.IGraph;
+import final_project_dp.base_classes.Node;
 
 import java.util.*;
 

@@ -1,12 +1,8 @@
 package final_project_dp.q4;
 
-import final_project_dp.Index;
-import final_project_dp.Matrix;
-import final_project_dp.Node;
+import final_project_dp.base_classes.Index;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
 public class Demo {
 
@@ -33,8 +29,11 @@ public class Demo {
 //        q4.setDistancesFromSourceNodeInNodesMap(weightedMatrix, new Index(0, 0),nodesMap);
 //        for(Map.Entry e : nodesMap.entrySet())
 //            System.out.println(e.getValue());
-//        Collection<Index> al = q4.func3(weightedMatrix, new Index(0, 0), new Index(3, 1));
-        Collection<Index> al = q4.dijkstraAlgorithm(weightedMatrix, new Index(1, 0), new Index(1, 2));
-        System.out.println(al);
+//        Collection<Index> al2 = q4.func(weightedMatrix, new Index(1, 0), new Index(1, 2));
+        for (int i = 0; i < 1; i++) {
+//            Collection<Index> al = q4.func(weightedMatrix, new Index(1, 0), new Index(1, 2));
+            Collection<Index> al2 = q4.dijkstraAlgorithm(weightedMatrix, new Index(1, 0), new Index(1, 2));
+//            System.out.println(al);
+        }
     }
 }
