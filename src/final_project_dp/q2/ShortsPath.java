@@ -1,68 +1,57 @@
 package final_project_dp.q2;
 
 import final_project_dp.base_classes.IGraph;
+import final_project_dp.base_classes.Index;
 import final_project_dp.base_classes.Node;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
-public class ShortsPath<T> {
+public class ShortsPath {
 
-    private Queue<Node<T>> workingQ; // באיזה קודקודים אני מבקר
-    private Set<Node<T>> finished; // סט של מי שאני כבר ביקרתי אצלו בסיבוב הנוכחי
-    private Set<Node<T>> visitedVertices; // סט של כל הקודקודים שביקרתי בהם
-
-
-    public ShortsPath() {
-        this.workingQ = new LinkedList<>();
-        this.finished = new LinkedHashSet<>();
-        this.visitedVertices = new LinkedHashSet<>();
-    }
-
-    // עובד
-    public Set<T> bfs(IGraph<T> someGraph, T source, T dest){
-
-        Map<T,Node<T>> map = new HashMap<>();
-
-        Node<T> sourceNode = someGraph.getNode(source);
-        if(sourceNode == null)
-            throw new IllegalArgumentException("source node not on the graph");
-
-        workingQ.add(sourceNode);
-        while (!workingQ.isEmpty()){
-            Node<T> removed = workingQ.poll();
-            finished.add(removed);
-            if(!map.containsKey(removed.getData()))
-                map.put(removed.getData(),removed);
-
-            if(removed.getData().equals(dest))
-                break;
-
-
-            Collection<Node<T>> reachableNodes = someGraph.getReachableNodes(removed);
-            for (Node<T> reachableNode : reachableNodes){
-//               removed.getParents().add()
-                if(!finished.contains(reachableNode) && !workingQ.contains(reachableNode)){
-                    workingQ.add(reachableNode);
-                }
-            }
-        }
-        Set<T> returnSet = new LinkedHashSet<>();
-        for (Node<T> node: finished){
-            System.out.println(node);
-            returnSet.add(node.getData());
-        }
-        finished.clear();
-        someGraph.backToRoot();
-        return returnSet;
-    }
 
     // לא עובד
-    public Set<T> shortsPath(IGraph<T> someGraph, T source, T destination){
+    public LinkedList<Queue<Index>> shortsPath(IGraph<Index> graph, Index source, Index destination) {
 
-        Node<T> sourceNode = new Node<>(source);
-        Node<T> destinationNode = new Node<>(destination);
+        LinkedList<Queue<Index>> phatFromSourceToDestination = new LinkedList<>();
 
+        Node<Index> sourceNode = new Node<>(source);
+        Node<Index> destinationNode = new Node<>(destination);
+        LinkedHashMap<Index, Queue<Index>> map = new LinkedHashMap<>();
 
-        return null;
+        Queue<Node<Index>> workingQ = new LinkedList<>();
+        HashSet<Node<Index>> visited = new HashSet<>();
+        Queue<Index> path = new LinkedList<>();
+        map.put(source, path);
+        workingQ.add(sourceNode);
+
+        while (!workingQ.isEmpty()) {
+            Node<Index> removed = workingQ.remove();
+            visited.add(removed);
+            map.get(removed.getData()).add(removed.getData());
+            Collection<Node<Index>> neighbors = graph.getReachableNodes(removed);
+            for (Node<Index> neighbor : neighbors) {
+                if (neighbor.equals(destinationNode)) {
+                    map.get(removed.getData()).add(neighbor.getData());
+                    phatFromSourceToDestination.add(map.get(removed.getData()));
+                }
+                if (!visited.contains(neighbor) && !workingQ.contains(neighbor)) {
+                    workingQ.add(neighbor);
+                    Queue<Index> q = new LinkedList<>(map.get(removed.getData()));
+                    map.put(neighbor.getData(), q);
+                }
+            }
+
+        }
+        int minLength = phatFromSourceToDestination.getFirst().size();
+        for (Queue<Index> q : phatFromSourceToDestination)
+            minLength = Math.min(minLength, q.size());
+
+        LinkedList<Queue<Index>> finalPath = new LinkedList<>();
+        for (Queue<Index> q : phatFromSourceToDestination)
+            if (q.size() == minLength)
+                finalPath.add(q);
+
+        return finalPath;
     }
 }
